@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Sport from '@/components/Sport.vue'
+import Sport from '@/components/categories/Sport.vue'
 </script>
 
 <template>

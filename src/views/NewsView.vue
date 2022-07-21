@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import News from '@/components/News.vue'
+import News from '@/components/categories/News.vue'
 </script>
 
 <template>

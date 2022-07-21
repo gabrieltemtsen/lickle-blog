@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Video from '@/components/Video.vue'
+import Video from '@/components/categories/Video.vue'
 </script>
 
 <template>
