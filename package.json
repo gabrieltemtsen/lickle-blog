@@ -14,9 +14,11 @@
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "axios": "^0.27.2",
     "bootstrap": "^5.2.0",
     "bootstrap-vue": "^2.22.0",
     "pinia": "^2.0.16",
+    "vee-validate": "^4.6.2",
     "vue": "^3.2.37",
     "vue-router": "^4.1.2"
   },
