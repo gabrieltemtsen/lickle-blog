@@ -4,11 +4,14 @@ export interface LoginUser {
 }
 
 export interface Post {
-  image_url: string;
-  cloudinary_id: string;
+  _id?: string;
+  user_id?: string;
+  image_url?: string;
+  cloudinary_id?: string;
   title: string;
   description: string;
   category: string;
   body: string;
+  date?: Date;
 
 }

@@ -1,33 +1,43 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { Form } from "vee-validate";
 import { reactive, ref } from "vue";
 import { usePostStore } from "@/stores/index";
 import type { Post } from "@/interface";
+import axios from "axios";
+
 //get store
 // const data = useShoppingStore();
 const postStore = usePostStore();
 
-const imageUrl = postStore.imageUrl;
-const public_id = postStore.cloudinary_id;
-
-
-
+const selectedImage = ref();
 const post = reactive<Post>({
   title: "",
   description: "",
   category: "",
   body: "",
-  image_url: imageUrl,
-  cloudinary_id: public_id,
+  image_url: "",
+  cloudinary_id: "",
 });
-const selectedImage = ref();
-const postImage = () => {
+
+const postImage = async () => {
   const formData = new FormData();
   const image = selectedImage.value.files[0];
   formData.append("image-file", image);
-  postStore.imagePost(formData);
+  try {
+    const res = await axios.post(`http://localhost:3000/utility`, formData, {
+      headers: {
+        "Content-type": "multi-part/form-data",
+      },
+    });
+    post.image_url = res.data.imageUrl;
+    post.cloudinary_id = res.data.cloudinary_id;
+  } catch (err: any) {
+    console.log("There is an error");
+  }
 };
+
 const submit = async (data: any) => {
   await postStore.createPost(data);
 };
@@ -47,6 +57,7 @@ const submit = async (data: any) => {
             <div class="container">
               <label for="psw"><b>Post Image</b></label>
               <input
+                class="form-control"
                 @input="postImage"
                 ref="selectedImage"
                 type="file"
@@ -63,7 +74,7 @@ const submit = async (data: any) => {
                 required
               />
 
-              <label for="titlw"><b>Description</b></label>
+              <label for="description"><b>Description</b></label>
               <input
                 type="text"
                 placeholder="Enter a short description"
@@ -71,21 +82,30 @@ const submit = async (data: any) => {
                 v-model="post.description"
                 required
               />
-              <label for="title"><b>Category</b></label>
-              <select name="categories">
+              <label for="category"><b>Category</b></label>
+              <select
+                class="form-select"
+                name="categories"
+                v-model="post.category"
+              >
                 <option value="sport">Sport</option>
                 <option value="music">Music</option>
                 <option value="education">Education</option>
                 <option value="others">Others</option>
               </select>
-              <label for="titlw"><b>Body</b></label>
-              <input
-                type="text"
-                placeholder="Enter Post Body"
-                name="email"
-                v-model="post.body"
-                required
-              />
+              <div class="col-sm-9">
+                <label for="titlw"><b>Body</b></label>
+                <textarea
+                  class="form-control mr-0 ml-auto"
+                  name="message"
+                  id="message"
+                  rows="9"
+                  placeholder="Enter Post Body"
+                  v-model="post.body"
+                  required
+                ></textarea>
+              </div>
+
               <hr />
 
               <button

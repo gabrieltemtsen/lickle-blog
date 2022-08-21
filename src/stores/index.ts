@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineStore } from "pinia";
 import axios from "axios";
 import type { LoginUser, Post } from "@/interface";
 import router from "@/router";
+import posts from "@/postsApi";
 
 export const useAuthStore = defineStore({
   id: "counter",
@@ -68,6 +70,8 @@ export const useAuthStore = defineStore({
 export const usePostStore = defineStore({
   id: "post",
   state: () => ({
+    posts,
+    author: "",
     imageUrl: "",
     cloudinary_id: "",
     token: localStorage.getItem("token"),
@@ -127,6 +131,17 @@ export const usePostStore = defineStore({
         // const { msg } = error.response.data;
         // this.hasError = true;
         // this.errMsg = msg;
+      }
+    },
+    async getAuthorById(id: any) {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/posts/author/${id}`,
+          id
+        );
+        this.author = res.data;
+      } catch (error: any) {
+        console.log("there is an error guy");
       }
     },
   },

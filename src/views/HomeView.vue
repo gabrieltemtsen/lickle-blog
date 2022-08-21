@@ -1,10 +1,73 @@
 <script setup lang="ts">
-import Content from '@/components/Content.vue'
+import PostCard from "@/components/PostCard.vue";
+import { usePostStore } from "@/stores";
+const data = usePostStore();
 </script>
 
 <template>
   <main>
-    
-    <Content  />
+    <div>
+      <h5>lickle-blog <i class="fa fa-caret-right"></i></h5>
+    </div>
+    <div class="row tm-row">
+      <div class="col-md-4 pl-4">
+        <hr class="tm-hr-primary" />
+        <h5 class="font-weight-bold spanborder"><span>Popular</span></h5>
+        <ol class="list-featured">
+          <li>
+            <span>
+              <h6 class="font-weight-bold">
+                <a href="./article.html" class="text-dark"
+                  >Unprecedented Views of the Birth of Planets</a
+                >
+              </h6>
+              <p class="text-muted">Jake Bittle in SCIENCE</p>
+            </span>
+          </li>
+          <li>
+            <span>
+              <h6 class="font-weight-bold">
+                <a href="./article.html" class="text-dark"
+                  >Effective New Target for Mood-Boosting Brain Stimulation
+                  Found</a
+                >
+              </h6>
+              <p class="text-muted">Jake Bittle in SCIENCE</p>
+            </span>
+          </li>
+        </ol>
+      </div>
+      <PostCard v-for="post in data.posts" :data="post" :key="post._id" />
+    </div>
+    <div class="row tm-row tm-mt-100 tm-mb-75">
+      <div class="tm-prev-next-wrapper">
+        <a
+          href="#"
+          class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled tm-mr-20"
+          >Prev</a
+        >
+        <a href="#" class="mb-2 tm-btn tm-btn-primary tm-prev-next">Next</a>
+      </div>
+      <div class="tm-paging-wrapper">
+        <span class="d-inline-block mr-3">Page</span>
+        <nav class="tm-paging-nav d-inline-block">
+          <ul>
+            <li class="tm-paging-item active">
+              <a href="#" class="mb-2 tm-btn tm-paging-link">1</a>
+            </li>
+            <li class="tm-paging-item">
+              <a href="#" class="mb-2 tm-btn tm-paging-link">2</a>
+            </li>
+            <li class="tm-paging-item">
+              <a href="#" class="mb-2 tm-btn tm-paging-link">3</a>
+            </li>
+            <li class="tm-paging-item">
+              <a href="#" class="mb-2 tm-btn tm-paging-link">4</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
   </main>
 </template>
+<!-- <PhoneCard v-for="phone in data.products" :data="phone" :key="phone._id" />  -->
