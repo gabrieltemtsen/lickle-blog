@@ -114,3 +114,7 @@ export const useImageApi = () => {
   };
   return { imageApi };
 };
+export const useSearchPost = (search: any) => {
+  const s = search;
+  return { s };
+};

@@ -4,7 +4,8 @@
 <script setup lang="ts">
 import { usePostStore } from "@/stores";
 import { useDateCalculation } from "@/utility";
-import { computed } from "vue";
+import axios from "axios";
+import { computed, reactive, ref } from "vue";
 import type { Post } from "../interface";
 
 const { friendlyDate } = useDateCalculation();
@@ -13,6 +14,7 @@ const props = defineProps<{
 }>();
 const postStore = usePostStore();
 const post = computed(() => props.data);
+
 const getDate = () => {
   const formatedDate = friendlyDate(post.value.date);
   return { formatedDate };
@@ -22,12 +24,42 @@ const { formatedDate } = getDate();
 const getAuthor = () => {
   const author = postStore.getAuthorById(post.value.user_id);
 };
+console.log("lol", post.value._id);
+const comments = ref();
 getAuthor();
+const getData = async () => {
+  const id = post.value._id;
+
+  try {
+    const res = await axios.get(
+      `http://localhost:3000/comments/comment/${id}`,
+      {
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    );
+    comments.value = res.data;
+  } catch (e: any) {
+    console.log(e);
+  }
+  // if(!response){
+  //   `<div> error in getting data </div>`;
+  // }
+};
+getData();
+
+
+// console.log(post.getid.id)
 </script>
 <template>
   <article class="col-12 col-md-6 tm-post">
     <hr class="tm-hr-primary" />
-    <a href="post.html" class="effect-lily tm-post-link tm-pt-60">
+    {{ post }}
+    <div
+      @click="$emit('item-clicked')"
+      class="effect-lily tm-post-link tm-pt-60"
+    >
       <div class="tm-post-link-inner">
         <img :src="post.image_url" alt="Image" class="img-fluid" />
       </div>
@@ -35,7 +67,7 @@ getAuthor();
       <h2 class="tm-pt-30 tm-color-primary tm-post-title">
         {{ post.title }}
       </h2>
-    </a>
+    </div>
     <p class="tm-pt-30">
       {{ post.description }}
     </p>
@@ -45,7 +77,7 @@ getAuthor();
     </div>
     <hr />
     <div class="d-flex justify-content-between">
-      <span>36 comments</span>
+      <span>{{ comments }} comments</span>
       <span>by {{ postStore.author }}</span>
     </div>
   </article>

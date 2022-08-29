@@ -45,7 +45,7 @@ const submit = async (data: any) => {
 
 <template>
   <div>
-    <h5>lickle-blog <i class="fa fa-caret-right"> Login</i></h5>
+    <h5>lickle-blog <i class="fa fa-caret-right"> Post</i></h5>
   </div>
   <section class="pt-9">
     <div class="container px-4 px-lg-5 mt-5">

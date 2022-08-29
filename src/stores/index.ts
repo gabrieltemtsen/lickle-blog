@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineStore } from "pinia";
 import axios from "axios";
-import type { LoginUser, Post } from "@/interface";
+import type { Comment1, LoginUser, Post } from "@/interface";
 import router from "@/router";
 import posts from "@/postsApi";
 
@@ -46,7 +47,10 @@ export const useAuthStore = defineStore({
     },
     async registerUser(payload: LoginUser) {
       try {
-        const res = await axios.post(`http://localhost:3000/register`, payload);
+        const res = await axios.post(
+          `http://localhost:3000/users/register`,
+          payload
+        );
         this.hasError = false;
         this.success = true;
         this.successMsg;
@@ -67,22 +71,39 @@ export const useAuthStore = defineStore({
   },
 });
 
+interface States {
+  posts: any;
+  author: string;
+  imageUrl: string;
+  onePost: any;
+  cloudinary_id: string;
+  token: string;
+  returnUrl: any;
+  Comments: any;
+  commentAuthor: any;
+}
 export const usePostStore = defineStore({
   id: "post",
-  state: () => ({
+  state: (): States => ({
     posts,
     author: "",
+    onePost: [],
     imageUrl: "",
+    Comments: [],
+    commentAuthor: "",
     cloudinary_id: "",
-    token: localStorage.getItem("token"),
+    token: localStorage.getItem("token") || "",
     returnUrl: null,
-    hasError: false,
-    errMsg: "",
-    success: false,
-    successMsg: "Registeration Successfull!",
+    // hasError: false,
+    // errMsg: "",
+    // success: false,
+    // successMsg: "Registeration Successfull!",
+    // search: "",
   }),
   getters: {
-    // doubleCount: (state) => state.counter * 2,
+    // getAllPosts(state) {
+    //   return state.posts;
+    // },
   },
   actions: {
     async imagePost(formData: any) {
@@ -102,7 +123,7 @@ export const usePostStore = defineStore({
 
         this.imageUrl = imageUrl;
         this.cloudinary_id = cloudinary_id;
-        this.hasError = false;
+        // this.hasError = false;
         // redirect to previous url or default to home page
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
@@ -110,6 +131,28 @@ export const usePostStore = defineStore({
         // const { msg } = error.response.data;
         // this.hasError = true;
         // this.errMsg = msg;
+      }
+    },
+    async getPosts(search?: any, page?: any) {
+      const arr = [];
+      if (search) {
+        arr.push(`s=${search}`);
+      }
+      if (page) {
+        arr.push(`page=${page}`);
+      }
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/posts?${arr.join("&")}`,
+          {
+            headers: {
+              "Content-type": "application/json",
+            },
+          }
+        );
+        // this.posts = res.data.data;
+      } catch (e: any) {
+        // hasError.value = e.response.data;
       }
     },
     async createPost(payload: Post) {
@@ -122,7 +165,7 @@ export const usePostStore = defineStore({
           },
         });
 
-        this.hasError = false;
+        // this.hasError = false;
         // redirect to previous url or default to home page
         router.push(this.returnUrl || "/");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -133,6 +176,48 @@ export const usePostStore = defineStore({
         // this.errMsg = msg;
       }
     },
+    async createComment(payload: Comment1) {
+      try {
+        const token: any = this.token;
+        console.log(token);
+        const res = await axios.post(
+          `http://localhost:3000/comments`,
+          payload,
+          {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("sent")
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        console.log("there is an error guy");
+        // const { msg } = error.response.data;
+        // this.hasError = true;
+        // this.errMsg = msg;
+      }
+    },
+    async getComments(id: any) {
+      try {
+        const res = await axios.get(`http://localhost:3000/comments/${id}`, id);
+        this.Comments = res.data;
+      } catch (error: any) {
+        console.log("there is an error guy");
+      }
+    },
+    async getCommentAuthor(id: any) {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/comments/author/${id}`,
+          id
+        );
+        this.commentAuthor = res.data;
+      } catch (error: any) {
+        console.log("there is an error guy");
+      }
+    },
     async getAuthorById(id: any) {
       try {
         const res = await axios.get(
@@ -140,6 +225,18 @@ export const usePostStore = defineStore({
           id
         );
         this.author = res.data;
+      } catch (error: any) {
+        console.log("there is an error guy");
+      }
+    },
+    async getPostById(id: any) {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/posts/post/${id}`,
+          id
+        );
+        this.onePost = res.data;
+        
       } catch (error: any) {
         console.log("there is an error guy");
       }

@@ -13,5 +13,9 @@ export interface Post {
   category: string;
   body: string;
   date?: Date;
+}
 
+export interface Comment1 {
+  post_id: string;
+  comment: string;
 }

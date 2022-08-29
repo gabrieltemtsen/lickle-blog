@@ -1,7 +1,30 @@
+<!-- eslint-disable @typescript-eslint/no-unused-vars -->
+<!-- eslint-disable no-unused-labels -->
 <script setup lang="ts">
 import PostCard from "@/components/PostCard.vue";
+import { getData } from "@/postsApi";
 import { usePostStore } from "@/stores";
+import { computed, onMounted, reactive } from "vue";
 const data = usePostStore();
+
+// const getAllPosts = computed(() => {
+//   return postStore.getAllPosts;
+// });
+// const posts = computed(() => {
+//   return postStore.posts;
+// })
+// onMounted(() => {
+//   postStore.getPosts();
+// })
+
+const page = reactive({
+  count: 1,
+  currentPage: 1,
+});
+const paginate = () => {
+  page.currentPage++;
+  return getData("", page.currentPage);
+};
 </script>
 
 <template>
@@ -11,7 +34,7 @@ const data = usePostStore();
     </div>
     <div class="row tm-row">
       <div class="col-md-4 pl-4">
-        <hr class="tm-hr-primary" />
+        <hr />
         <h5 class="font-weight-bold spanborder"><span>Popular</span></h5>
         <ol class="list-featured">
           <li>
@@ -35,9 +58,47 @@ const data = usePostStore();
               <p class="text-muted">Jake Bittle in SCIENCE</p>
             </span>
           </li>
+          <li>
+            <span>
+              <h6 class="font-weight-bold">
+                <a href="./article.html" class="text-dark"
+                  >Effective New Target for Mood-Boosting Brain Stimulation
+                  Found</a
+                >
+              </h6>
+              <p class="text-muted">Jake Bittle in SCIENCE</p>
+            </span>
+          </li>
+          <li>
+            <span>
+              <h6 class="font-weight-bold">
+                <a href="./article.html" class="text-dark"
+                  >Effective New Target for Mood-Boosting Brain Stimulation
+                  Found</a
+                >
+              </h6>
+              <p class="text-muted">Jake Bittle in SCIENCE</p>
+            </span>
+          </li>
+          <li>
+            <span>
+              <h6 class="font-weight-bold">
+                <a href="./article.html" class="text-dark"
+                  >Effective New Target for Mood-Boosting Brain Stimulation
+                  Found</a
+                >
+              </h6>
+              <p class="text-muted">Jake Bittle in SCIENCE</p>
+            </span>
+          </li>
         </ol>
       </div>
-      <PostCard v-for="post in data.posts" :data="post" :key="post._id" />
+      <PostCard
+        v-for="post in data.posts"
+        :data="post"
+        :key="post._id"
+        @item-clicked="$router.push({ name: 'Post', params: { id: post._id } })"
+      />
     </div>
     <div class="row tm-row tm-mt-100 tm-mb-75">
       <div class="tm-prev-next-wrapper">
@@ -46,7 +107,12 @@ const data = usePostStore();
           class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled tm-mr-20"
           >Prev</a
         >
-        <a href="#" class="mb-2 tm-btn tm-btn-primary tm-prev-next">Next</a>
+        <a
+          href="#"
+          @click="paginate"
+          class="mb-2 tm-btn tm-btn-primary tm-prev-next"
+          >Next</a
+        >
       </div>
       <div class="tm-paging-wrapper">
         <span class="d-inline-block mr-3">Page</span>
@@ -70,4 +136,10 @@ const data = usePostStore();
     </div>
   </main>
 </template>
+
+<style>
+hr {
+  border-top: 5px solid rgb(8, 22, 70);
+}
+</style>
 <!-- <PhoneCard v-for="phone in data.products" :data="phone" :key="phone._id" />  -->

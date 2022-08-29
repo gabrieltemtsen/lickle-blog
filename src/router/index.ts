@@ -50,9 +50,10 @@ const router = createRouter({
       component: ContactView,
     },
     {
-      path: "/post",
+      path: "/post/:id",
       name: "Post",
       component: PostView,
+      props: true,
     },
     {
       path: "/login",
@@ -65,11 +66,23 @@ const router = createRouter({
       component: Register,
     },
     {
-      path: '/createpost',
-      name: 'CreatePost',
+      path: "/createpost",
+      name: "CreatePost",
       component: CreatePostViewVue,
     },
   ],
 });
+
+// router.beforeEach(async (to) => {
+//   // redirect to login page if not logged in and trying to access a restricted page
+//   const publicPages = ['/login', '/register', '/','/cart'];
+//   const authRequired = !publicPages.includes(to.path);
+//   const auth: any = useAuthStore();
+
+//   if (authRequired && !auth.token) {
+//       auth.returnUrl = to.fullPath;
+//       return '/login';
+//   }
+// });
 
 export default router;
