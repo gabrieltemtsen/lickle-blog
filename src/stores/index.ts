@@ -5,6 +5,8 @@ import axios from "axios";
 import type { Comment1, LoginUser, Post } from "@/interface";
 import router from "@/router";
 import posts from "@/postsApi";
+import { createToast } from "mosha-vue-toastify";
+import "mosha-vue-toastify/dist/style.css";
 
 export const useAuthStore = defineStore({
   id: "counter",
@@ -79,7 +81,7 @@ interface States {
   cloudinary_id: string;
   token: string;
   returnUrl: any;
-  Comments: any;
+  Comment: any;
   commentAuthor: any;
 }
 export const usePostStore = defineStore({
@@ -89,7 +91,7 @@ export const usePostStore = defineStore({
     author: "",
     onePost: [],
     imageUrl: "",
-    Comments: [],
+    Comment,
     commentAuthor: "",
     cloudinary_id: "",
     token: localStorage.getItem("token") || "",
@@ -179,7 +181,7 @@ export const usePostStore = defineStore({
     async createComment(payload: Comment1) {
       try {
         const token: any = this.token;
-        console.log(token);
+
         const res = await axios.post(
           `http://localhost:3000/comments`,
           payload,
@@ -190,7 +192,10 @@ export const usePostStore = defineStore({
             },
           }
         );
-        console.log("sent")
+        createToast({
+          title: "some title",
+          description: "some good description",
+        });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.log("there is an error guy");
@@ -202,7 +207,7 @@ export const usePostStore = defineStore({
     async getComments(id: any) {
       try {
         const res = await axios.get(`http://localhost:3000/comments/${id}`, id);
-        this.Comments = res.data;
+        this.Comment = res.data.comments;
       } catch (error: any) {
         console.log("there is an error guy");
       }
@@ -236,7 +241,7 @@ export const usePostStore = defineStore({
           id
         );
         this.onePost = res.data;
-        
+        return res.data;
       } catch (error: any) {
         console.log("there is an error guy");
       }

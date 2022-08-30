@@ -7,16 +7,6 @@ import { usePostStore } from "@/stores";
 import { computed, onMounted, reactive } from "vue";
 const data = usePostStore();
 
-// const getAllPosts = computed(() => {
-//   return postStore.getAllPosts;
-// });
-// const posts = computed(() => {
-//   return postStore.posts;
-// })
-// onMounted(() => {
-//   postStore.getPosts();
-// })
-
 const page = reactive({
   count: 1,
   currentPage: 1,

@@ -1,3 +1,4 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <!-- eslint-disable vue/multi-word-component-names -->
@@ -15,18 +16,20 @@ const props = defineProps<{
 const postStore = usePostStore();
 const post = computed(() => props.data);
 
+console.log(post);
+
 const getDate = () => {
   const formatedDate = friendlyDate(post.value.date);
   return { formatedDate };
 };
 const { formatedDate } = getDate();
 
-const getAuthor = () => {
+const getAuthor = (id?: any) => {
   const author = postStore.getAuthorById(post.value.user_id);
 };
-console.log("lol", post.value._id);
-const comments = ref();
 getAuthor();
+
+const comments = ref();
 const getData = async () => {
   const id = post.value._id;
 
@@ -49,13 +52,11 @@ const getData = async () => {
 };
 getData();
 
-
 // console.log(post.getid.id)
 </script>
 <template>
   <article class="col-12 col-md-6 tm-post">
     <hr class="tm-hr-primary" />
-    {{ post }}
     <div
       @click="$emit('item-clicked')"
       class="effect-lily tm-post-link tm-pt-60"
