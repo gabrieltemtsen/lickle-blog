@@ -108,6 +108,17 @@ const toggler = () => {
               Create Post
             </router-link>
           </li>
+          <li class="tm-nav-item">
+            <router-link
+              to=""
+              v-if="auth.token"
+              @click="auth.logout()"
+              class="tm-nav-link"
+            >
+              <i class="fas fa-arrow-right"></i>
+              logout
+            </router-link>
+          </li>
           <!-- <li class="tm-nav-item">
             <router-link to="/register" class="tm-nav-link">
               <i class="fas fa-user"></i>

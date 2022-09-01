@@ -3,6 +3,8 @@
 
 import axios from "axios";
 import { reactive, ref } from "vue";
+import { createToast } from "mosha-vue-toastify";
+import "mosha-vue-toastify/dist/style.css";
 
 // date operations
 export const useDateCalculation = () => {
@@ -99,22 +101,29 @@ export const imageData = ref({
   imageUrl: "",
   cloudinary_id: "",
 });
-export const useImageApi = () => {
-  const imageApi = async (form_data: any) => {
-    try {
-      const res = await axios.post(`http://localhost:3000/utility`, form_data, {
-        headers: {
-          "Content-type": "multi-part/form-data",
-        },
-      });
-      const data = res.data;
-    } catch (err: any) {
-      console.log("There is an error");
-    }
-  };
-  return { imageApi };
-};
+// export const useImageApi = () => {
+//   const imageApi = async (form_data: any) => {
+//     try {
+//       const res = await axios.post(`http://localhost:3000/utility`, form_data, {
+//         headers: {
+//           "Content-type": "multi-part/form-data",
+//         },
+//       });
+//       const data = res.data;
+//       createToast("Sucess, wow")
+//     } catch (err: any) {
+//       console.log("There is an error");
+//     }
+//   };
+//   return { imageApi };
+// };
 export const useSearchPost = (search: any) => {
   const s = search;
+
   return { s };
+};
+
+export const getSearch = (msg?: any) => {
+  const searcher = msg;
+  return { searcher };
 };

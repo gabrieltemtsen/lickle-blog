@@ -6,6 +6,8 @@ import { reactive, ref } from "vue";
 import { usePostStore } from "@/stores/index";
 import type { Post } from "@/interface";
 import axios from "axios";
+import { createToast } from "mosha-vue-toastify";
+import "mosha-vue-toastify/dist/style.css";
 
 //get store
 // const data = useShoppingStore();
@@ -26,6 +28,14 @@ const postImage = async () => {
   const image = selectedImage.value.files[0];
   formData.append("image-file", image);
   try {
+    createToast(
+      { title: "Please wait", description: "uploading-Image" },
+      {
+        transition: "slide",
+        type: "warning",
+        timeout: 5000,
+      }
+    );
     const res = await axios.post(`http://localhost:3000/utility`, formData, {
       headers: {
         "Content-type": "multi-part/form-data",
@@ -33,8 +43,26 @@ const postImage = async () => {
     });
     post.image_url = res.data.imageUrl;
     post.cloudinary_id = res.data.cloudinary_id;
+    createToast(
+      { title: "Success", description: "Image-Uploaded" },
+      {
+        transition: "bounce",
+        type: "success",
+        showIcon: true,
+        timeout: 2000,
+      }
+    );
   } catch (err: any) {
     console.log("There is an error");
+    createToast(
+      { title: "Error", description: "Please try again" },
+      {
+        transition: "bounce",
+        type: "danger",
+        showIcon: true,
+        timeout: 3000,
+      }
+    );
   }
 };
 

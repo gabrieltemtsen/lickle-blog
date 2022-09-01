@@ -1,17 +1,19 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import { usePostStore } from "@/stores";
+import { useAuthStore, usePostStore } from "@/stores";
 import { useDateCalculation } from "@/utility";
 import { reactive, ref, computed } from "vue";
 import CommentsView from "@/components/CommentsView.vue";
-import type { Comment1 } from "@/interface";
+import type { Comment1, Like } from "@/interface";
 import axios from "axios";
 import VueBasicAlert from "vue-basic-alert";
 
 const { friendlyDate } = useDateCalculation();
 const postStore = usePostStore();
+const auth = useAuthStore();
 
 const props = defineProps({
   id: { type: String, required: true },
@@ -21,6 +23,18 @@ const post_id = ref(props.id);
 
 const post = computed(() => postStore.onePost);
 
+const likes = ref();
+
+const getLikes = async () => {
+  try {
+    const res = await axios.get(`http://localhost:3000/likes/${post_id.value}`);
+    likes.value = res.data;
+  } catch (error: any) {
+    console.log("there is an error guy");
+  }
+};
+getLikes();
+
 const getData = async () => {
   const response = await postStore.getPostById(post_id.value);
   if (response) {
@@ -28,11 +42,20 @@ const getData = async () => {
   }
 };
 getData();
-
 const payload = reactive<Comment1>({
   comment: "",
   post_id: post_id.value,
 });
+
+const createLike = reactive<Like>({
+  user_id: auth.user._id,
+  post_id: post_id.value,
+});
+
+const sendLike = async () => {
+  await postStore.createLike(createLike);
+  await getLikes();
+};
 
 const sendComment = () => {
   return postStore.createComment(payload);
@@ -42,7 +65,6 @@ const getCommentsbyId = () => {
   return postStore.getComments(post_id.value);
 };
 getCommentsbyId();
-const showDismissibleAlert = false;
 </script>
 
 <template>
@@ -77,8 +99,11 @@ const showDismissibleAlert = false;
             post.category
           }}</span>
         </div>
-        <button class="btn tm-color-primary btn-block">
-          18 <i class="fas fa-thumbs-up" aria-hidden="true"></i>
+        <button
+          @click="sendLike"
+          class="btn tm-color-primary btn-block"
+        >
+          {{ likes }} <i class="fas fa-thumbs-up" aria-hidden="true"></i>
         </button>
         <hr />
         <!-- Comments -->
@@ -101,9 +126,10 @@ const showDismissibleAlert = false;
                 v-model="payload.comment"
                 name="message"
                 rows="9"
+                required
               ></textarea>
             </div>
-          
+
             <div class="text-right">
               <button class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
             </div>

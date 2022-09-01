@@ -21,3 +21,8 @@ export interface Comment1 {
   post_id?: string;
   comment?: string;
 }
+
+export interface Like {
+  user_id: string;
+  post_id: string;
+}

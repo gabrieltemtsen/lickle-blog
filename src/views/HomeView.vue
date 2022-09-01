@@ -4,7 +4,8 @@
 import PostCard from "@/components/PostCard.vue";
 import { getData } from "@/postsApi";
 import { usePostStore } from "@/stores";
-import { computed, onMounted, reactive } from "vue";
+import { getSearch } from "@/utility";
+import { computed, onMounted, reactive, ref } from "vue";
 const data = usePostStore();
 
 const page = reactive({
@@ -15,73 +16,21 @@ const paginate = () => {
   page.currentPage++;
   return getData("", page.currentPage);
 };
+
+const {searcher} = getSearch();
+console.log("pp",searcher)
+
 </script>
 
 <template>
   <main>
     <div>
-      <h5>lickle-blog <i class="fa fa-caret-right"></i></h5>
+      <h5>lickle-blog <i class="fa fa-caret-right">Home</i></h5>
     </div>
     <div class="row tm-row">
       <div class="col-md-4 pl-4">
         <hr />
-        <h5 class="font-weight-bold spanborder"><span>Popular</span></h5>
-        <ol class="list-featured">
-          <li>
-            <span>
-              <h6 class="font-weight-bold">
-                <a href="./article.html" class="text-dark"
-                  >Unprecedented Views of the Birth of Planets</a
-                >
-              </h6>
-              <p class="text-muted">Jake Bittle in SCIENCE</p>
-            </span>
-          </li>
-          <li>
-            <span>
-              <h6 class="font-weight-bold">
-                <a href="./article.html" class="text-dark"
-                  >Effective New Target for Mood-Boosting Brain Stimulation
-                  Found</a
-                >
-              </h6>
-              <p class="text-muted">Jake Bittle in SCIENCE</p>
-            </span>
-          </li>
-          <li>
-            <span>
-              <h6 class="font-weight-bold">
-                <a href="./article.html" class="text-dark"
-                  >Effective New Target for Mood-Boosting Brain Stimulation
-                  Found</a
-                >
-              </h6>
-              <p class="text-muted">Jake Bittle in SCIENCE</p>
-            </span>
-          </li>
-          <li>
-            <span>
-              <h6 class="font-weight-bold">
-                <a href="./article.html" class="text-dark"
-                  >Effective New Target for Mood-Boosting Brain Stimulation
-                  Found</a
-                >
-              </h6>
-              <p class="text-muted">Jake Bittle in SCIENCE</p>
-            </span>
-          </li>
-          <li>
-            <span>
-              <h6 class="font-weight-bold">
-                <a href="./article.html" class="text-dark"
-                  >Effective New Target for Mood-Boosting Brain Stimulation
-                  Found</a
-                >
-              </h6>
-              <p class="text-muted">Jake Bittle in SCIENCE</p>
-            </span>
-          </li>
-        </ol>
+        
       </div>
       <PostCard
         v-for="post in data.posts"

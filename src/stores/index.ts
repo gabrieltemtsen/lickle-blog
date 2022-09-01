@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineStore } from "pinia";
 import axios from "axios";
-import type { Comment1, LoginUser, Post } from "@/interface";
+import type { Comment1, Like, LoginUser, Post } from "@/interface";
 import router from "@/router";
 import posts from "@/postsApi";
 import { createToast } from "mosha-vue-toastify";
@@ -56,6 +56,15 @@ export const useAuthStore = defineStore({
         this.hasError = false;
         this.success = true;
         this.successMsg;
+        createToast(
+          { title: "Success", description: "Registration successful" },
+          {
+            transition: "bounce",
+            type: "success",
+            showIcon: true,
+            timeout: 3000,
+          }
+        );
         setTimeout(() => router.push({ path: "/login" }), 1000);
       } catch (error: any) {
         // const { msg } = error.response.data;
@@ -69,6 +78,7 @@ export const useAuthStore = defineStore({
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       router.push("/login");
+      router.go("");
     },
   },
 });
@@ -83,6 +93,8 @@ interface States {
   returnUrl: any;
   Comment: any;
   commentAuthor: any;
+  likes: any;
+  isSearched: any;
 }
 export const usePostStore = defineStore({
   id: "post",
@@ -92,10 +104,12 @@ export const usePostStore = defineStore({
     onePost: [],
     imageUrl: "",
     Comment,
+    likes: "",
     commentAuthor: "",
     cloudinary_id: "",
     token: localStorage.getItem("token") || "",
     returnUrl: null,
+    isSearched: "",
     // hasError: false,
     // errMsg: "",
     // success: false,
@@ -179,6 +193,7 @@ export const usePostStore = defineStore({
       }
     },
     async createComment(payload: Comment1) {
+      const { post_id } = payload;
       try {
         const token: any = this.token;
 
@@ -192,19 +207,37 @@ export const usePostStore = defineStore({
             },
           }
         );
-        createToast({
-          title: "some title",
-          description: "some good description",
-        });
+        createToast(
+          { title: "Success", description: "Comment added" },
+          {
+            transition: "zoom",
+            type: "success",
+            showIcon: true,
+            timeout: 2000,
+          }
+        );
+        this.getComments(post_id);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.log("there is an error guy");
+        if (error.response.status === 401) {
+          createToast(
+            { title: "Please Login", description: "" },
+            {
+              transition: "bounce",
+              type: "danger",
+              showIcon: true,
+              timeout: 2000,
+            }
+          );
+        }
+
         // const { msg } = error.response.data;
         // this.hasError = true;
         // this.errMsg = msg;
       }
     },
-    async getComments(id: any) {
+    async getComments(id?: any) {
       try {
         const res = await axios.get(`http://localhost:3000/comments/${id}`, id);
         this.Comment = res.data.comments;
@@ -244,6 +277,36 @@ export const usePostStore = defineStore({
         return res.data;
       } catch (error: any) {
         console.log("there is an error guy");
+      }
+    },
+    async getLikes(id: any) {
+      try {
+        const res = await axios.get(`http://localhost:3000/likes/${id}`, id);
+        this.likes = res.data;
+      } catch (error: any) {
+        console.log("there is an error guy");
+      }
+    },
+    Searched(msg?: string) {
+      this.isSearched = msg;
+      console.log(this.isSearched);
+    },
+    async createLike(payload: Like) {
+      const { post_id } = payload;
+      try {
+        const token: any = this.token;
+        const res = await axios.post(`http://localhost:3000/likes`, payload, {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.getLikes(post_id);
+      } catch (error: any) {
+        console.log("there is an error guy");
+        // const { msg } = error.response.data;
+        // this.hasError = true;
+        // this.errMsg = msg;
       }
     },
   },

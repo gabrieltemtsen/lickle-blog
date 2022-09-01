@@ -22,7 +22,7 @@ const author = ref();
 const getCommentAuthor = async () => {
   try {
     const res = await axios.get(
-      `http://localhost:3000/comments/author/${comment.value.user_id}`,
+      `http://localhost:3000/comments/author/${comment.value.user_id}`
     );
     author.value = res.data;
   } catch (error: any) {
