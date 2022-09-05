@@ -10,8 +10,6 @@ import axios from "axios";
 const posts = ref();
 const total_page = ref();
 
-const xer = 5
-
 const getData = async (search?: any, page?: any) => {
   const arr = [];
   if (search) {
@@ -48,7 +46,6 @@ const paginate = () => {
   return getData("education", page.currentPage);
 };
 getData("education");
-
 </script>
 
 <template>
@@ -84,7 +81,9 @@ getData("education");
               <a href="#" class="mb-2 tm-btn tm-paging-link">1</a>
             </li>
             <li class="tm-paging-item">
-              <a href="#" class="mb-2 tm-btn tm-paging-link">{{total_page}}</a>
+              <a href="#" class="mb-2 tm-btn tm-paging-link">{{
+                total_page
+              }}</a>
             </li>
             <li class="tm-paging-item">
               <a href="#" class="mb-2 tm-btn tm-paging-link">3</a>

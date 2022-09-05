@@ -3,6 +3,10 @@ export interface LoginUser {
   password: string;
 }
 
+export interface PasswordReset {
+  email: string;
+}
+
 export interface Post {
   _id?: string;
   user_id?: string;

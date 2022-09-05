@@ -1,35 +1,60 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { Form } from "vee-validate";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useAuthStore } from "@/stores/index";
-import type { LoginUser } from "@/interface";
-//get store
-// const data = useShoppingStore();
-const authStore = useAuthStore();
+import { createToast } from "mosha-vue-toastify";
+import "mosha-vue-toastify/dist/style.css";
+import axios from "axios";
+import router from "@/router";
+import type { PasswordReset } from "@/interface";
 
-const log = reactive<LoginUser>({
+//get store
+
+const log = reactive<PasswordReset>({
   email: "",
-  password: "",
 });
 
-const logUser = async (data: LoginUser) => {
-  return await authStore.login(data);
+const resetPassword = async (email: PasswordReset) => {
+  console.log(email);
+  try {
+    const res = await axios.post(`http://localhost:3000/users/reset`, email);
+    const response = res.data;
+    createToast(
+      { title: `${response}`, description: "check your email" },
+      {
+        transition: "bounce",
+        type: "success",
+        showIcon: true,
+        hideProgressBar: true,
+        timeout: 4000,
+      }
+    );
+    setTimeout(() => router.push({ path: "/login" }), 1000);
+  } catch (error: any) {
+    // const { msg } = error.response.data;
+    // this.hasError = true;
+    // this.errMsg = msg;
+  }
 };
 </script>
 
 <template>
   <div>
-    <h5>lickle-blog <i class="fa fa-caret-right"> Login</i></h5>
+    <h5>lickle-blog <i class="fa fa-caret-right"> password reset</i></h5>
   </div>
   <section class="pt-9">
     <div class="container px-4 px-lg-5 mt-5">
       <div class="card">
         <div class="card-body">
-          <span class="text-center"><h1>Login</h1></span>
-          <span class="text-center"><h6>Welcome-back please login</h6></span>
+          <span class="text-center"><h1>Reset password</h1></span>
+          <span class="text-center"><h6></h6></span>
 
-          <Form @submit="logUser(log)" method="post" v-slot="{ isSubmitting }">
+          <Form
+            @submit="resetPassword(log)"
+            method="post"
+            v-slot="{ isSubmitting }"
+          >
             <div class="container">
               <label for="email"><b>Email</b></label>
               <input
@@ -37,15 +62,6 @@ const logUser = async (data: LoginUser) => {
                 placeholder="Enter Email"
                 name="email"
                 v-model="log.email"
-                required
-              />
-
-              <label for="psw"><b>Password</b></label>
-              <input
-                type="password"
-                placeholder="Enter Password"
-                name="password"
-                v-model="log.password"
                 required
               />
               <hr />
@@ -59,19 +75,8 @@ const logUser = async (data: LoginUser) => {
                   v-show="isSubmitting"
                   class="spinner-border spinner-border-sm mr-1"
                 ></span>
-                Login
+                Reset Password
               </button>
-            </div>
-
-            <div class="container signin">
-              <p>
-                Don't have an account?
-                <router-link to="/register">Register</router-link>.
-              </p>
-              <p>
-                Forgot Password?
-                <router-link to="/resetpassword">Reset password</router-link>.
-              </p>
             </div>
           </Form>
         </div>

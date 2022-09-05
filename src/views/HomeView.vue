@@ -5,7 +5,7 @@ import PostCard from "@/components/PostCard.vue";
 import { getData } from "@/postsApi";
 import { usePostStore } from "@/stores";
 import { getSearch } from "@/utility";
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 const data = usePostStore();
 
 const page = reactive({
@@ -17,8 +17,8 @@ const paginate = () => {
   return getData("", page.currentPage);
 };
 
-const {searcher} = getSearch();
-console.log("pp",searcher)
+
+
 
 </script>
 

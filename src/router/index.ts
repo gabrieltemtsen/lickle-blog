@@ -1,15 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import EducationView from "@/views/EducationView.vue";
-import VideoView from "@/views/VideoView.vue";
 import MusicView from "@/views/MusicView.vue";
 import SportView from "@/views/SportView.vue";
 import ContactView from "@/views/ContactView.vue";
-import NewsView from "@/views/NewsView.vue";
 import PostView from "@/views/PostView.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import CreatePostViewVue from "@/views/CreatePostView.vue";
+import ForgotPasswordVue from "@/views/ForgotPassword.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,16 +27,6 @@ const router = createRouter({
       path: "/category/music",
       name: "Music",
       component: MusicView,
-    },
-    {
-      path: "/category/video",
-      name: "Video",
-      component: VideoView,
-    },
-    {
-      path: "/category/news",
-      name: "News",
-      component: NewsView,
     },
     {
       path: "/category/sport",
@@ -69,6 +58,11 @@ const router = createRouter({
       path: "/createpost",
       name: "CreatePost",
       component: CreatePostViewVue,
+    },
+    {
+      path: "/resetpassword",
+      name: "ResetPassword",
+      component: ForgotPasswordVue,
     },
   ],
 });

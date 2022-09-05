@@ -8,6 +8,7 @@ import posts from "@/postsApi";
 import { createToast } from "mosha-vue-toastify";
 import "mosha-vue-toastify/dist/style.css";
 
+
 export const useAuthStore = defineStore({
   id: "counter",
   state: () => ({
@@ -36,15 +37,37 @@ export const useAuthStore = defineStore({
         this.hasError = false;
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user) || "{}");
+        createToast(
+          { title: "Success", description: "Login successful" },
+          {
+            transition: "bounce",
+            type: "success",
+            showIcon: true,
+            timeout: 1500,
+          }
+        );
         // redirect to previous url or default to home page
-        router.push(this.returnUrl || "/");
+        setTimeout(() => router.push({ path: "/" }), 1000);
+        
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        console.log("there is an error guy");
+        console.log("Network Errror, please check your connection");
+        createToast(
+          {
+            title: "email or password incorect",
+            description: "please try again.",
+          },
+          {
+            transition: "bounce",
+            type: "danger",
+            showIcon: true,
+            timeout: 2000,
+          }
+        );
         // const { msg } = error.response.data;
         // this.hasError = true;
         // this.errMsg = msg;
-        this.logout();
       }
     },
     async registerUser(payload: LoginUser) {
@@ -72,13 +95,13 @@ export const useAuthStore = defineStore({
         // this.errMsg = msg;
       }
     },
-    logout() {
+      logout() {
       this.user = null;
       this.token = null;
       localStorage.removeItem("user");
       localStorage.removeItem("token");
+      router.go();
       router.push("/login");
-      router.go("");
     },
   },
 });
@@ -284,7 +307,7 @@ export const usePostStore = defineStore({
         const res = await axios.get(`http://localhost:3000/likes/${id}`, id);
         this.likes = res.data;
       } catch (error: any) {
-        console.log("there is an error guy");
+        console.log("Liked::Already");
       }
     },
     Searched(msg?: string) {
