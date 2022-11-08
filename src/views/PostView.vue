@@ -99,10 +99,7 @@ getCommentsbyId();
             post.category
           }}</span>
         </div>
-        <button
-          @click="sendLike"
-          class="btn tm-color-primary btn-block"
-        >
+        <button @click="sendLike" class="btn tm-color-primary btn-block">
           {{ likes }} <i class="fas fa-thumbs-up" aria-hidden="true"></i>
         </button>
         <hr />

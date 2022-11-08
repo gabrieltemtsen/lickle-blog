@@ -16,8 +16,6 @@ const props = defineProps<{
 const postStore = usePostStore();
 const post = computed(() => props.data);
 
-
-
 const getDate = () => {
   const formatedDate = friendlyDate(post.value.date);
   return { formatedDate };

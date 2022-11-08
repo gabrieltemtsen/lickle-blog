@@ -4,7 +4,8 @@ export interface LoginUser {
 }
 
 export interface PasswordReset {
-  email: string;
+  email?: string;
+  otp?: string;
 }
 
 export interface Post {

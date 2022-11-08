@@ -8,6 +8,14 @@ import type { LoginUser } from "@/interface";
 // const data = useShoppingStore();
 const authStore = useAuthStore();
 
+let stack = "stackie 1";
+const sayhello = () => {
+  stack = "stackie 2";
+  const loger = "hi am txt" + stack;
+  console.log(loger);
+};
+sayhello();
+
 const log = reactive<LoginUser>({
   email: "",
   password: "",
@@ -61,17 +69,6 @@ const logUser = async (data: LoginUser) => {
                 ></span>
                 Login
               </button>
-            </div>
-
-            <div class="container signin">
-              <p>
-                Don't have an account?
-                <router-link to="/register">Register</router-link>.
-              </p>
-              <p>
-                Forgot Password?
-                <router-link to="/resetpassword">Reset password</router-link>.
-              </p>
             </div>
           </Form>
         </div>
